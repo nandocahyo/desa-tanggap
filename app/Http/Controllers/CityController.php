@@ -12,6 +12,12 @@ class CityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function getCities() {
+        $cities = City::where('province_id', request()->province_id)->get();
+        return response()->json(["code" => 200, 'status' => 'success', 'data' => $cities]);
+    }
+    
     public function index()
     {
         //

@@ -13,6 +13,16 @@
                 <a href="{{ route('user.home') }}" class="nav-link"><i
                         class="fas fa-fire"></i><span>Dashboard</span></a>
             </li>
+
+            <li class="dropdown">
+                <a href="#" class="nav-link has-dropdown"><i class="fa fa-envelope"></i><span>Laporan Mandiri<span></a>
+                    <ul class="dropdown-menu">
+                        <li><a class="nav-link" href="{{ route('user.reports.create') }}">Buat Laporan</a></li>
+                        <li><a class="nav-link" href="{{ route('user.reports.index') }}">Riwayat
+                                        Laporan</a></li>
+                    </ul>
+            </li>
+            
         </ul>
     </aside>
 </div>

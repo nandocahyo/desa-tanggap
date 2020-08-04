@@ -24,4 +24,8 @@ Route::get('admin/logout', 'Auth\AdminAuthController@postLogout')->name("admin.l
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('user.home');
+// Route untuk user
+Route::group(["middleware" => "auth"], function() {
+    Route::get('/home', 'HomeController@index')->name('user.home');
+    Route::resource("reports", "ReportController", ["as" => "user"])->except(["show", "edit", "update", "destroy"]);
+});

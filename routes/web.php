@@ -32,6 +32,9 @@ Route::group(["prefix" => "admin", "middleware" => "auth:admin"], function() {
 
     Route::resource("jobs", "JobController", ["as" => "admin"])->except(["show"]);
     Route::resource("provinces", "ProvinceController", ["as" => "admin"])->except(["show"]);
+    Route::resource("cities", "CityController", ["as" => "admin"])->except(["show"]);
+    Route::resource("users", "UserController", ["as" => "admin"])->except(["show", "create", "store", "edit", "update"]);
+    Route::resource("reports", "UserReportController", ["as" => "admin"])->except(["create", "store", "edit", "update", "destroy"]);
 });
 
 // Route untuk user

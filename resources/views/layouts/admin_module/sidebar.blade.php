@@ -31,6 +31,25 @@
                     <li><a class="nav-link" href="{{ route('admin.provinces.create') }}">Tambah Provinsi</a></li>
                 </ul>
             </li>
+
+            <li class="dropdown">
+                <a href="#" class="nav-link has-dropdown"><i class="fa fa-university"></i><span>Manajemen
+                        Kota</span></a>
+                <ul class="dropdown-menu">
+                    <li><a class="nav-link" href="{{ route('admin.cities.index') }}">Daftar Kota</a></li>
+                    <li><a class="nav-link" href="{{ route('admin.cities.create') }}">Tambah Kota</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                <a href="{{ route('admin.users.index') }}" class="nav-link"><i class="fa fa-users"></i><span>Manajemen
+                        User</span></a>
+
+            <li class="dropdown">
+                <a href="{{ route('admin.reports.index') }}" class="nav-link"><i
+                        class="fa fa-envelope"></i><span>Laporan
+                        Warga</span></a>
+            </li>
             
         </ul>
     </aside>

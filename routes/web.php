@@ -27,5 +27,8 @@ Auth::routes();
 // Route untuk user
 Route::group(["middleware" => "auth"], function() {
     Route::get('/home', 'HomeController@index')->name('user.home');
+    Route::get('/user/profile/{user}', 'HomeController@userProfile')->name('user.profile');
+    Route::get('/user/profile/edit/{user}', 'HomeController@editUserProfile')->name('user.profile.edit');
+    Route::put('/user/profile/update/{user}', 'HomeController@updateUserProfile')->name('user.profile.update');
     Route::resource("reports", "ReportController", ["as" => "user"])->except(["show", "edit", "update", "destroy"]);
 });

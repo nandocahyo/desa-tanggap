@@ -13,9 +13,9 @@
             </a>
 
             <div class="dropdown-menu dropdown-menu-right">
-                <a href="#" class="dropdown-item has-icon">
-                    <i class="far fa-user"></i> Profile
-                </a>
+            <a href="{{ route('user.profile', Auth::user()->id) }}" class="dropdown-item has-icon">
+                <i class="far fa-user"></i> Profile
+            </a>
 
                 <a class="dropdown-item has-icon text-danger" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

@@ -24,6 +24,13 @@ Route::get('admin/logout', 'Auth\AdminAuthController@postLogout')->name("admin.l
 
 Auth::routes();
 
+// Route untuk admin
+Route::group(["prefix" => "admin", "middleware" => "auth:admin"], function() {
+    Route::get("/home", function() {
+        return view("admin.index");
+    })->name("admin.home");
+});
+
 // Route untuk user
 Route::group(["middleware" => "auth"], function() {
     Route::get('/home', 'HomeController@index')->name('user.home');

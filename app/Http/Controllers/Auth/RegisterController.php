@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
+use App\Job;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -40,34 +42,41 @@ class RegisterController extends Controller
     {
         $this->middleware('guest');
     }
+    
+    public function showRegistrationForm() {
+        $jobs = Job::orderBy("created_at", "DESC")->get();
 
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        return view("auth.register", compact("jobs"));
     }
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return \App\User
-     */
-    protected function create(array $data)
-    {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+    public function register(Request $request) {
+        $this->validate($request, [
+            "name" => "required|string",
+            "job_id" => "required|exists:jobs,id",
+            "email" => "required|email",
+            "password" => "required",
+            "image" => "required|mimes:jpeg,jpg,png",
+            "gender" => "required",
+            "phone_number" => "required|numeric"
         ]);
+
+        if ($request->hasFile("image")) {
+            $file = $request->file("image");
+            $filename = time() . "." . $file->getClientOriginalExtension();
+
+            $file->move('assets/images', $filename);
+
+            User::create([
+                "job_id" => $request->job_id,
+                "name" => $request->name,
+                "email" => $request->email,
+                "password" =>  Hash::make($request->password),
+                "image" => $filename,
+                "gender" => $request->gender,
+                "phone_number" => $request->phone_number
+            ]);
+        }
+
+        return redirect(route("login"))->with(["success" => "Akun berhasil dibuat!"]);
     }
 }

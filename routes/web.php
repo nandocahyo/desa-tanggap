@@ -29,6 +29,9 @@ Route::group(["prefix" => "admin", "middleware" => "auth:admin"], function() {
     Route::get("/home", function() {
         return view("admin.index");
     })->name("admin.home");
+
+    Route::resource("jobs", "JobController", ["as" => "admin"])->except(["show"]);
+    Route::resource("provinces", "ProvinceController", ["as" => "admin"])->except(["show"]);
 });
 
 // Route untuk user

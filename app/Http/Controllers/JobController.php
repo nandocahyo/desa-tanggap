@@ -14,7 +14,9 @@ class JobController extends Controller
      */
     public function index()
     {
-        //
+        $jobs = Job::orderBy("created_at", "DESC")->paginate(10);
+        
+        return view("admin.jobs.index", compact("jobs"));
     }
 
     /**
@@ -24,7 +26,7 @@ class JobController extends Controller
      */
     public function create()
     {
-        //
+        return view("admin.jobs.create");
     }
 
     /**
@@ -35,7 +37,13 @@ class JobController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            "name" => "required"
+        ]);
+
+        Job::create($request->except("_token"));
+
+        return redirect(route("admin.jobs.index"))->with(["success" => "Pekerjaan berhasil ditambahkan!"]);
     }
 
     /**
@@ -57,7 +65,7 @@ class JobController extends Controller
      */
     public function edit(Job $job)
     {
-        //
+        return view("admin.jobs.edit", compact("job"));
     }
 
     /**
@@ -69,7 +77,13 @@ class JobController extends Controller
      */
     public function update(Request $request, Job $job)
     {
-        //
+        $this->validate($request, [
+            "name" => "required"
+        ]);
+
+        $job->update($request->except("_token"));
+
+        return redirect(route("admin.jobs.index"))->with(["success" => "Pekerjaan berhasil diupdate!"]);
     }
 
     /**
@@ -80,6 +94,14 @@ class JobController extends Controller
      */
     public function destroy(Job $job)
     {
-        //
+        $selectedJob = Job::with(["users"])->where("id", $job->id)->first();
+
+        if (count($selectedJob->users) > 0) {
+            return redirect(route("admin.jobs.index"))->with(["error" => "Pekerjaan sedang digunakan!"]);
+        }
+
+        $job->delete();
+
+        return redirect(route("admin.jobs.index"))->with(["success" => "Pekerjaan berhasil dihapus!"]);
     }
 }

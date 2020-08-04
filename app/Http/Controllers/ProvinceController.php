@@ -14,7 +14,9 @@ class ProvinceController extends Controller
      */
     public function index()
     {
-        //
+        $provinces = Province::orderBy("created_at", "DESC")->paginate(10);
+
+        return view("admin.provinces.index", compact("provinces"));
     }
 
     /**
@@ -24,7 +26,7 @@ class ProvinceController extends Controller
      */
     public function create()
     {
-        //
+        return view("admin.provinces.create");
     }
 
     /**
@@ -35,7 +37,13 @@ class ProvinceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            "name" => "required|unique:provinces"
+        ]);
+
+        Province::create($request->except("_token"));
+
+        return redirect(route("admin.provinces.index"))->with(["success" => "Provinsi berhasil ditambahkan!"]);
     }
 
     /**
@@ -57,7 +65,7 @@ class ProvinceController extends Controller
      */
     public function edit(Province $province)
     {
-        //
+        return view("admin.provinces.edit", compact("province"));
     }
 
     /**
@@ -69,7 +77,13 @@ class ProvinceController extends Controller
      */
     public function update(Request $request, Province $province)
     {
-        //
+        $this->validate($request, [
+            "name" => "required|unique:provinces,id," . $province->id
+        ]);
+
+        $province->update($request->except("_token"));
+
+        return redirect(route("admin.provinces.index"))->with(["success" => "Provinsi berhasil diupdate!"]);
     }
 
     /**
@@ -80,6 +94,14 @@ class ProvinceController extends Controller
      */
     public function destroy(Province $province)
     {
-        //
+        $selectedProvince = Province::with(["cities"])->where("id", $province->id)->first();
+
+        if (count($selectedProvince->cities) > 0) {
+            return redirect(route("admin.provinces.index"))->with(["error" => "Provinsi sedang digunakan!"]);
+        }
+
+        $province->delete();
+
+        return redirect(route("admin.provinces.index"))->with(["success" => "Provinsi berhasil dihapus!"]);
     }
 }
